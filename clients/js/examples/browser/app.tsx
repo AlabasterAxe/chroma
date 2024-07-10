@@ -50,23 +50,23 @@ const useDocuments = (query?: string) => {
 
         if (query) {
           const results = await chroma.queryRecords(collection, {
-            query,
+            queryTexts: query,
           });
           if (abortSignal?.aborted) {
             return;
           }
 
           const maxDistance = results.distances
-            ? Math.max(...results.distances)
+            ? Math.max(...results.distances[0])
             : -Infinity;
           setDocuments(
-            results.documents.map((document, i) => {
-              const distance = results.distances?.[i] ?? 0;
+            results.documents[0].map((document, i) => {
+              const distance = results.distances?.[0][i] ?? 0;
               return {
                 document: document!,
                 relativeDistance: distance / maxDistance,
               };
-            })
+            }),
           );
         } else {
           const results = await chroma.getRecords(collection);
@@ -77,14 +77,14 @@ const useDocuments = (query?: string) => {
           setDocuments(
             results.documents.map((document) => ({
               document: document!,
-            }))
+            })),
           );
         }
       } finally {
         setIsLoading(false);
       }
     },
-    [collection, query]
+    [collection, query],
   );
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function App() {
   const trimmedQuery = query.trim();
 
   const { documents, revalidate, isLoading } = useDocuments(
-    trimmedQuery === "" ? undefined : trimmedQuery
+    trimmedQuery === "" ? undefined : trimmedQuery,
   );
 
   const handleDocumentAdd = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -121,8 +121,8 @@ export function App() {
     setIsMutating(true);
     try {
       await chroma.upsertRecords(collection, {
-        id: await hashString(document),
-        document: document,
+        ids: await hashString(document),
+        documents: document,
       });
 
       await revalidate();

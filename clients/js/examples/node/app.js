@@ -39,7 +39,7 @@ app.get("/", async (req, res) => {
   });
 
   const query = await cc.queryRecords(queryCollection, {
-    query: "doc1",
+    queryTexts: "doc1",
     nResults: 1,
   });
   console.log("query", query);
