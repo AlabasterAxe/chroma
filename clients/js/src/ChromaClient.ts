@@ -410,14 +410,9 @@ export class ChromaClient {
   async addRecords(
     collection: Collection,
     params: AddRecordsParams,
-  ): Promise<AddResponse> {
-    if (typeof params.ids === "string") {
-      throw new Error(
-        "To add a single record, use the singular field names (id, embedding, metadata, document) instead of the plural field names (ids, embeddings, metadatas, documents)",
-      );
-    }
+  ): Promise<void> {
     await this.initPromise;
-    return await this.api.add(
+    await this.api.add(
       collection.id,
       // TODO: For some reason the auto generated code requires metadata to be defined here.
       (await prepareRecordRequest(
@@ -448,11 +443,6 @@ export class ChromaClient {
    * ```
    */
   async upsertRecords(collection: Collection, params: UpsertRecordsParams) {
-    if (typeof params.ids === "string") {
-      throw new Error(
-        "To upsert a single record, use the singular field names (id, embedding, metadata, document) instead of the plural field names (ids, embeddings, metadatas, documents)",
-      );
-    }
     await this.initPromise;
     await this.api.upsert(
       collection.id,
@@ -485,15 +475,10 @@ export class ChromaClient {
    * ```
    */
   async updateRecords(collection: Collection, params: UpdateRecordsParams) {
-    if (typeof params.ids === "string") {
-      throw new Error(
-        "To update a single record, use the singular field names (id, embedding, metadata, document) instead of the plural field names (ids, embeddings, metadatas, documents)",
-      );
-    }
     await this.initPromise;
     await this.api.update(
       collection.id,
-      await prepareRecordRequest(params, collection.embeddingFunction),
+      await prepareRecordRequest(params, collection.embeddingFunction, true),
       this.api.options,
     );
   }
