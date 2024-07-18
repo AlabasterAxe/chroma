@@ -19,10 +19,7 @@ const hashString = async (message: string) => {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 };
 
-const chroma = new ChromaClient({
-  path: "http://localhost:8001",
-  auth: { provider: "basic", credentials: "admin:admin" },
-});
+const chroma = new ChromaClient({ path: "http://localhost:8001" });
 
 const useCollection = () => {
   const [collection, setCollection] = useState<Collection>();
