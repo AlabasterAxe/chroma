@@ -62,9 +62,7 @@ export class TokenAuthClientProvider implements ClientAuthProvider {
     textCredentials: any,
     headerType: TokenHeaderType = "AUTHORIZATION",
   ) {
-    const envVarTextCredentials = process.env.CHROMA_CLIENT_AUTH_CREDENTIALS;
-
-    const creds = textCredentials ?? envVarTextCredentials;
+    const creds = textCredentials ?? process.env.CHROMA_CLIENT_AUTH_CREDENTIALS;
     if (creds === undefined) {
       throw new Error(
         "Credentials must be supplied via environment variable (CHROMA_CLIENT_AUTH_CREDENTIALS) or passed in as configuration.",
