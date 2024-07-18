@@ -19,6 +19,7 @@ export const chromaTokenBearer = () =>
     auth: {
       provider: "token",
       credentials: "test-token",
+      tokenHeaderType: "AUTHORIZATION",
     },
   });
 export const chromaTokenXToken = () =>
